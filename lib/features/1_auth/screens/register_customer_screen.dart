@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/features/2_customer/home/screens/customer_home_screen.dart';
 import 'package:food_delivery_app/features/1_auth/screens/login_customer_screen.dart';
 import 'register_driver_screen.dart';
 import 'register_restaurant_screen.dart';
@@ -126,7 +127,13 @@ class _RegisterPageUserState extends State<RegisterPageUser> {
                                   minimumSize: Size(330, 45),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(19))),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const HomePage()),
+                                );
+                              },
                               child: Text(
                                 'Register',
                                 style: TextStyle(

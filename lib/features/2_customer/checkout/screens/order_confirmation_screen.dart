@@ -52,10 +52,6 @@ class OrderConfirmationScreen extends StatelessWidget {
                     title: const Text('Biaya Pengiriman'),
                     trailing: Text('Rp ${deliveryFee.toStringAsFixed(0)}'),
                   ),
-                  ListTile(
-                    title: const Text('Diskon'),
-                    trailing: Text('Rp ${discount.toStringAsFixed(0)}'),
-                  ),
                   const Divider(),
                   ListTile(
                     title: const Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),

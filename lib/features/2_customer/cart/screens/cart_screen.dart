@@ -2,14 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery_app/features/2_customer/checkout/screens/checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
-  final List<Map<String, dynamic>> cartItems;
-  final ValueChanged<List<Map<String, dynamic>>> onUpdate;
-
-  const CartScreen({
-    super.key,
-    required this.cartItems,
-    required this.onUpdate,
-  });
+  const CartScreen({super.key});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -17,12 +10,32 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   late List<Map<String, dynamic>> _items;
-  final double deliveryFee = 10000; // Contoh ongkos kirim tetap
+  final double deliveryFee = 10000;
 
   @override
   void initState() {
     super.initState();
-    _items = List.from(widget.cartItems);
+    // Data diinisialisasi langsung di sini dengan data contoh.
+    _items = [
+      {
+        'name': 'Nasi Goreng Spesial',
+        'price': 25000.0,
+        'quantity': 2,
+        'instructions': 'Pedas sedang, jangan pakai sawi',
+      },
+      {
+        'name': 'Ayam Bakar Madu',
+        'price': 35000.0,
+        'quantity': 1,
+        'instructions': 'Paha atas ya',
+      },
+      {
+        'name': 'Es Teh Manis',
+        'price': 5000.0,
+        'quantity': 3,
+        'instructions': '',
+      },
+    ];
   }
 
   void increment(int index) {
@@ -67,7 +80,6 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   void dispose() {
-    widget.onUpdate(_items);
     super.dispose();
   }
 
@@ -76,7 +88,7 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Keranjang', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Color(0xFF88D66C),
+        backgroundColor: const Color(0xFF88D66C),
       ),
       body: _items.isEmpty
           ? const Center(child: Text('Keranjang kosong'))
@@ -111,7 +123,7 @@ class _CartScreenState extends State<CartScreen> {
                                     child: Text(
                                       item['name'],
                                       style: const TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 17,
                                           fontWeight: FontWeight.w600),
                                     ),
                                   ),
@@ -128,7 +140,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.add_circle_outline),
-                                    color: Color(0xFF88D66C),
+                                    color: const Color(0xFF88D66C),
                                     iconSize: 28,
                                     tooltip: 'Tambah',
                                     onPressed: () => increment(index),
@@ -142,6 +154,7 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ],
                               ),
+                              const SizedBox(height: 9),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Catatan khusus',
@@ -227,7 +240,7 @@ class _CartScreenState extends State<CartScreen> {
                               },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 26),
-                          backgroundColor: Color(0xFF88D66C),
+                          backgroundColor: const Color(0xFF88D66C),
                         ),
                         child: const Text('Checkout', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold , color: Colors.black)),
                       ),

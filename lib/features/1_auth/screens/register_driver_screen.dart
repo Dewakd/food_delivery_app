@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery_app/features/1_auth/screens/login_driver_screen.dart';
+import 'package:food_delivery_app/features/4_driver/dashboard/screens/driver_dashboard_screen.dart';
 import 'register_customer_screen.dart';
 import 'register_restaurant_screen.dart';
 
@@ -126,7 +126,13 @@ class _RegisterPageDriverState extends State<RegisterPageDriver> {
                                   minimumSize: Size(330, 45),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(19))),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const DriverDashboard()),
+                                );
+                              },
                               child: Text(
                                 'Register',
                                 style: TextStyle(
@@ -142,7 +148,7 @@ class _RegisterPageDriverState extends State<RegisterPageDriver> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const LoginPageDriver()),
+                                    MaterialPageRoute(builder: (context) => const DriverDashboard()),
                                   );
                                 },
                                 child: Text(

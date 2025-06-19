@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_delivery_app/features/2_customer/home/screens/customer_home_screen.dart';
+import 'package:food_delivery_app/features/4_driver/dashboard/screens/driver_dashboard_screen.dart';
 import 'login_customer_screen.dart';
 import 'login_restaurant_screen.dart';
 import 'register_driver_screen.dart';
@@ -106,7 +106,7 @@ class _LoginPageDriverState extends State<LoginPageDriver> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomePage()),
+                            builder: (context) => const DriverDashboard()),
                       );
                     },
                   ),

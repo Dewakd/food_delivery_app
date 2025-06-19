@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/features/1_auth/screens/register_restaurant_screen.dart';
-import 'package:food_delivery_app/features/2_customer/home/screens/customer_home_screen.dart';
+import 'package:food_delivery_app/features/3_restaurant_owner/dashboard/screens/restaurant_dashboard_screen.dart';
 import 'login_driver_screen.dart';
 import 'login_customer_screen.dart';
 
@@ -106,7 +106,7 @@ class _LoginPageRestaurantState extends State<LoginPageRestaurant> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomePage()),
+                            builder: (context) => const RestaurantDashboardPage()),
                       );
                     },
                   ),
