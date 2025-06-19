@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:food_delivery_app/features/4_driver/earnings/screens/earnings_history_screen.dart';
 import 'package:food_delivery_app/features/4_driver/jobs/screens/job_list_screen.dart';
+import '../../../../providers/auth_provider.dart';
+import '../../../1_auth/screens/login_screen.dart';
 
 class DriverDashboard extends StatelessWidget {
   const DriverDashboard({super.key});
@@ -8,18 +12,44 @@ class DriverDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, 
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Driver Dashboard', 
-            style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black, 
-            ),
+        title: const Text(
+          'Driver Dashboard',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
-        backgroundColor: Color(0xFF88D66C), 
+        ),
+        backgroundColor: Color(0xFF88D66C),
         foregroundColor: Colors.black,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.red),
+            onPressed: () async {
+              final authProvider = Provider.of<AuthProvider>(
+                context,
+                listen: false,
+              );
+              await authProvider.logout();
+
+              Fluttertoast.showToast(
+                msg: "Driver logged out successfully!",
+                toastLength: Toast.LENGTH_SHORT,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+              );
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false,
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -31,7 +61,7 @@ class DriverDashboard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.white, 
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: 20),
@@ -50,7 +80,7 @@ class DriverDashboard extends StatelessWidget {
             MenuCard(
               icon: Icons.attach_money,
               title: 'Riwayat & Pendapatan',
-              color: const Color(0xFF73BBA3), 
+              color: const Color(0xFF73BBA3),
               onTap: () {
                 Navigator.push(
                   context,

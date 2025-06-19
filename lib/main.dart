@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery_app/features/2_customer/cart/screens/cart_screen.dart';
-import 'package:food_delivery_app/features/0_splash/screens/splash_screen.dart';
-import 'package:food_delivery_app/features/4_driver/dashboard/screens/driver_dashboard_screen.dart';
-import 'package:food_delivery_app/features/3_restaurant_owner/dashboard/screens/restaurant_dashboard_screen.dart';
-
+import 'package:provider/provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/backend_cart_provider.dart';
+import 'features/0_splash/screens/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const CartScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => BackendCartProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Food Delivery',
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: SplashScreen(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

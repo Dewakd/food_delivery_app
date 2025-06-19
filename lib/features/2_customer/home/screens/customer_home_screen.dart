@@ -1,4 +1,12 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../providers/auth_provider.dart';
+import '../../../../services/restaurant_service.dart';
+import '../../../1_auth/screens/login_screen.dart';
+import 'restaurant_list_screen.dart';
+import 'restaurant_profile_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,12 +16,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  List<Map<String, dynamic>> _featuredRestaurants = [];
+  bool _isLoading = true;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _loadFeaturedRestaurants();
+  }
+
+  Future<void> _loadFeaturedRestaurants() async {
+    try {
+      final restaurants = await RestaurantService.getAllRestaurants(limit: 3);
+      setState(() {
+        _featuredRestaurants = restaurants;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print('Error loading restaurants: $e');
+    }
   }
 
   @override
@@ -23,10 +47,7 @@ class _HomePageState extends State<HomePage> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFFE8F7E4),
-            Color(0xFFF9F9B7),
-          ],
+          colors: [Color(0xFFE8F7E4), Color(0xFFF9F9B7)],
         ),
       ),
       child: Scaffold(
@@ -39,10 +60,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text(
                 'Kirim ke alamat :',
-                style: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Colors.grey[800], fontSize: 12),
               ),
               Text(
                 'Dalung permai blok 1 no 12',
@@ -56,16 +74,50 @@ class _HomePageState extends State<HomePage> {
           ),
           actions: [
             Container(
-              margin: const EdgeInsets.only(right: 16),
+              margin: const EdgeInsets.only(right: 8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white.withOpacity(0.9),
               ),
               child: IconButton(
-                icon: const Icon(Icons.notifications_outlined,
-                    color: Colors.black87),
+                icon: const Icon(
+                  Icons.notifications_outlined,
+                  color: Colors.black87,
+                ),
                 onPressed: () {
                   // Fungsi Notifikasi
+                },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(right: 16),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.red.withOpacity(0.9),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.logout, color: Colors.white),
+                onPressed: () async {
+                  final authProvider = Provider.of<AuthProvider>(
+                    context,
+                    listen: false,
+                  );
+                  await authProvider.logout();
+
+                  Fluttertoast.showToast(
+                    msg: "Logged out successfully!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                  );
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                    (route) => false,
+                  );
                 },
               ),
             ),
@@ -113,27 +165,31 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         _buttonKategori(
                           icon: Icons.fastfood,
-                          label: 'Cepat Saji',
+                          label: 'Indonesian',
                           backgroundColor: Colors.orange[100]!,
                           iconColor: Colors.orange[700]!,
+                          category: 'Indonesian',
                         ),
                         _buttonKategori(
-                          icon: Icons.eco,
-                          label: 'Makan Sehat',
+                          icon: Icons.local_pizza,
+                          label: 'Italian',
                           backgroundColor: Colors.green[100]!,
                           iconColor: Colors.green[700]!,
+                          category: 'Italian',
                         ),
                         _buttonKategori(
-                          icon: Icons.set_meal,
-                          label: 'Seafood',
+                          icon: Icons.ramen_dining,
+                          label: 'Japanese',
                           backgroundColor: Colors.blue[100]!,
                           iconColor: Colors.blue[700]!,
+                          category: 'Japanese',
                         ),
                         _buttonKategori(
-                          icon: Icons.discount,
-                          label: 'Discount',
+                          icon: Icons.rice_bowl,
+                          label: 'Chinese',
                           backgroundColor: Colors.red[100]!,
                           iconColor: Colors.red[700]!,
+                          category: 'Chinese',
                         ),
                       ],
                     ),
@@ -150,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Restoran Terbaik',
+                          'Restoran Terdekat',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -158,7 +214,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            // See All Button
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const RestaurantListScreen(
+                                      title: 'All Restaurants',
+                                    ),
+                              ),
+                            );
                           },
                           child: const Text(
                             'See all',
@@ -171,21 +235,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    const RestaurantCard(
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3',
-                      name: 'Warung Wardani',
-                      category: 'Nasi Campur • Tradisional',
-                      rating: '4.8',
-                    ),
-                    const SizedBox(height: 16),
-                    const RestaurantCard(
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3',
-                      name: 'Made\'s Warung',
-                      category: 'Seafood • Traditional',
-                      rating: '4.5',
-                    ),
+                    _isLoading ? _buildLoadingCards() : _buildRestaurantCards(),
                     const SizedBox(height: 24),
                     // Section Penawaran Spesial
                     Padding(
@@ -254,48 +304,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
-            selectedItemColor: Colors.green[700],
-            unselectedItemColor: Colors.grey,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                activeIcon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search_outlined),
-                activeIcon: Icon(Icons.search),
-                label: 'Search',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long_outlined),
-                activeIcon: Icon(Icons.receipt_long),
-                label: 'Orders',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
-                activeIcon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -305,32 +313,161 @@ class _HomePageState extends State<HomePage> {
     required String label,
     required Color backgroundColor,
     required Color iconColor,
+    required String category,
   }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RestaurantListScreen(
+              category: category,
+              title: '$label Restaurants',
+            ),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          Container(
+            width: 65,
+            height: 65,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 30, color: iconColor),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingCards() {
     return Column(
       children: [
-        Container(
-          width: 65,
-          height: 65,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
-            size: 30,
-            color: iconColor,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-          textAlign: TextAlign.center,
-        ),
+        _buildLoadingCard(),
+        const SizedBox(height: 16),
+        _buildLoadingCard(),
       ],
+    );
+  }
+
+  Widget _buildLoadingCard() {
+    return Container(
+      width: double.infinity,
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(15),
+              ),
+            ),
+            child: const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 150,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: 100,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRestaurantCards() {
+    if (_featuredRestaurants.isEmpty) {
+      return Column(
+        children: [
+          Icon(Icons.restaurant_outlined, size: 64, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          Text(
+            'No restaurants available',
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      children: _featuredRestaurants.map((restaurant) {
+        return Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RestaurantProfileScreen(
+                      restaurantId: restaurant['restoranId']?.toString() ?? '1',
+                    ),
+                  ),
+                );
+              },
+              child: RestaurantCard(
+                imageUrl:
+                    restaurant['urlGambar'] ??
+                    'https://via.placeholder.com/400x200?text=Restaurant',
+                name: restaurant['nama'] ?? 'Unknown Restaurant',
+                category: restaurant['jenisMasakan'] ?? 'Various',
+                rating:
+                    (restaurant['averageRating']?.toString() ??
+                    restaurant['rating']?.toString() ??
+                    '0.0'),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        );
+      }).toList(),
     );
   }
 }
@@ -370,14 +507,28 @@ class RestaurantCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(15),
-            ),
-            child: Image.network(
-              imageUrl,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
               width: double.infinity,
               height: 200,
               fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                height: 200,
+                color: Colors.grey[200],
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: 200,
+                color: Colors.grey[200],
+                child: const Center(
+                  child: Icon(Icons.restaurant, size: 40, color: Colors.grey),
+                ),
+              ),
             ),
           ),
           Padding(
@@ -492,10 +643,7 @@ class SpecialOfferCard extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 description,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 11),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -518,10 +666,7 @@ class SpecialOfferCard extends StatelessWidget {
               ),
               child: const Text(
                 'Order Now',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 11,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
               ),
             ),
           ),

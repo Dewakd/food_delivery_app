@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:food_delivery_app/features/3_restaurant_owner/menu/screens/menu_management_screen.dart';
 import 'package:food_delivery_app/features/3_restaurant_owner/menu/screens/new_order_screen.dart';
 import 'package:food_delivery_app/features/3_restaurant_owner/menu/screens/update_order_screen.dart';
 import 'package:food_delivery_app/features/3_restaurant_owner/settings/screens/order_history_screen.dart';
 import 'package:food_delivery_app/features/3_restaurant_owner/settings/screens/restaurant_settings_screen.dart';
-
+import '../../../../providers/auth_provider.dart';
+import '../../../1_auth/screens/login_screen.dart';
 
 class RestaurantDashboardPage extends StatelessWidget {
   const RestaurantDashboardPage({super.key});
@@ -21,6 +24,31 @@ class RestaurantDashboardPage extends StatelessWidget {
         foregroundColor: Colors.black,
         centerTitle: true,
         elevation: 5,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.red),
+            onPressed: () async {
+              final authProvider = Provider.of<AuthProvider>(
+                context,
+                listen: false,
+              );
+              await authProvider.logout();
+
+              Fluttertoast.showToast(
+                msg: "Restaurant owner logged out successfully!",
+                toastLength: Toast.LENGTH_SHORT,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+              );
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false,
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -77,7 +105,10 @@ class RestaurantDashboardPage extends StatelessWidget {
         title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => page),
+          );
         },
       ),
     );

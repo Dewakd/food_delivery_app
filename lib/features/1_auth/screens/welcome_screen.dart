@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_customer_screen.dart';
+import 'login_screen.dart';
 import 'register_customer_screen.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -13,8 +13,8 @@ class WelcomePage extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage('assets/background_welcome_page.png'),
             fit: BoxFit.cover,
+          ),
         ),
-      ),
         child: SafeArea(
           child: Center(
             child: Padding(
@@ -22,10 +22,7 @@ class WelcomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/food_delivery.png',
-                    height: 90,
-                  ),
+                  Image.asset('assets/food_delivery.png', height: 90),
                   const SizedBox(height: 30),
                   const Text(
                     "Food Delivery",
@@ -39,10 +36,7 @@ class WelcomePage extends StatelessWidget {
                   const Text(
                     "Pesan makanan favoritmu\nkapan saja, di mana saja.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   const SizedBox(height: 70),
                   Column(
@@ -55,7 +49,9 @@ class WelcomePage extends StatelessWidget {
                             // Navigasi ke halaman login
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const LoginPageUser()),
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -64,17 +60,17 @@ class WelcomePage extends StatelessWidget {
                               color: Colors.black,
                               width: 1,
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(19),
                             ),
                           ),
                           child: const Text(
                             'Login',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
+                            style: TextStyle(fontSize: 16, color: Colors.black),
                           ),
                         ),
                       ),
@@ -86,22 +82,24 @@ class WelcomePage extends StatelessWidget {
                             // Navigasi ke halaman register
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const RegisterPageUser()),
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterPageUser(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF88D66C),
-                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(19),
                             ),
                           ),
                           child: const Text(
                             'Register',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
                       ),
