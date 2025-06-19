@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/features/4_driver/dashboard/screens/driver_dashboard_screen.dart';
+import 'package:food_delivery_app/features/1_auth/screens/login_driver_screen.dart';
 import 'register_customer_screen.dart';
 import 'register_restaurant_screen.dart';
 
@@ -148,7 +149,7 @@ class _RegisterPageDriverState extends State<RegisterPageDriver> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const DriverDashboard()),
+                                    MaterialPageRoute(builder: (context) => const LoginPageDriver()),
                                   );
                                 },
                                 child: Text(
